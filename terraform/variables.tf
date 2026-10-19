@@ -7,12 +7,12 @@ variable "aws_region" {
 # ECR & ECS settings
 variable "ecr_repository_name" {
   type    = string
-  default = "ecr_service"
+  default = "product-api"
 }
 
 variable "service_name" {
   type    = string
-  default = "CS6650L2"
+  default = "product-api"
 }
 
 variable "container_port" {

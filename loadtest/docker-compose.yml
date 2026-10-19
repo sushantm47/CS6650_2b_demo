@@ -1,0 +1,25 @@
+# Locust master + workers in Docker (Web UI: http://localhost:8089)
+#
+#   Normal test against ECS (PowerShell):
+#     $env:TARGET_HOST="http://<ECS-PUBLIC-IP>:8080"; $env:USER_CLASSES="ProductUser"; docker compose up --scale worker=2
+#     $env:USER_CLASSES="FastProductUser"  -> FastHttpUser comparison
+#   Stress test (step load shape, no think time):
+#     $env:LOCUSTFILE="locustfile_stress.py"; $env:USER_CLASSES="StressUser"; docker compose up --scale worker=4
+#   Against the local server instead of ECS:
+#     $env:TARGET_HOST="http://host.docker.internal:8080"
+services:
+  master:
+    image: locustio/locust:2.46.7
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./:/mnt/locust
+    command: -f /mnt/locust/${LOCUSTFILE:-locustfile.py} --master -H ${TARGET_HOST:-http://host.docker.internal:8080} ${USER_CLASSES-ProductUser}
+
+  worker:
+    image: locustio/locust:2.46.7
+    volumes:
+      - ./:/mnt/locust
+    command: -f /mnt/locust/${LOCUSTFILE:-locustfile.py} --worker --master-host master ${USER_CLASSES-ProductUser}
+    depends_on:
+      - master

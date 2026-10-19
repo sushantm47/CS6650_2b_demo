@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  # The Product API running in this docker-compose stack
+  - job_name: local
+    static_configs:
+      - targets: ["app:8080"]
+
+  # Optional: scrape the ECS deployment too. Uncomment and put in the task's public IP.
+  - job_name: ecs
+    static_configs:
+      - targets: ["35.95.146.206:8080"]

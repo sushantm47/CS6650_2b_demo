@@ -2,3 +2,8 @@
 **.tfstate
 **.tfstate.*
 **/.terraform/
+*.pem
+.env
+*.tar
+*.exe
+__pycache__/
